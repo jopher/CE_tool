@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Class Comparer</title>
+<link rev="Made" href="mailto:jlyuen@ics.uci.edu">
+<meta charset="UTF-8" name="viewport" content="width=device-width" author="Jonathan Yuen">
+<link rel="stylesheet" type="text/css"  href="css/mobile.css" media="screen and (min-width:10.5em)"/>
+<script src="js/jquery-3.1.0.js"></script>
+<script src="js/play.js"></script>
+
+<script src="js/vars.js"></script>
+<script src="js/var_functions.js"></script>
+
+<script >
+$(function(){
+
+  $('#help').on('touchstart click', function(){
+    alert("placeholder_button");
+
+  });
+  $("#comp").on('touchstart', function(){
+    if (defaultDeptChoice!="NaN" && defaultClassChoice !="NaN"){
+          addComp();
+    }
+    else{
+        alert("Error no class has been selected");
+    }
+  });
+$("#comp").on('click', function(){
+    if (defaultDeptChoice!="NaN" && defaultClassChoice !="NaN"){
+          addComp();
+    }
+    else{
+          alert("Error no class has been selected");
+    }
+  });
+  $("#byDept").on('click', function(){
+      currentDropDown="byDept";
+      currentDropDownID="myDDropDown";
+      dropDown("myDDropDown");
+    });
+  $("#byName").on('click', function(){
+    currentDropDown="byName";
+    dropDown("byName");
+  });
+  $("#byClasses").on('click', function(){
+    currentDropDown="byClasses";
+    currentDropDownID="myCDropDown";
+
+    dropDown("myCDropDown");
+  });
+
+  jQuery(document).on('click', 'a', function(event){
+    // alert("clicked 'a' "+event.target.id);
+    var t=document.getElementById("compHThree");
+    // if (event.target.class.)
+    if (event.target.id.search("dept_")!=-1){
+      defaultDeptChoice=event.target.text;
+    }
+    if (event.target.id.search("class_")!=-1){
+      defaultClassChoice=event.target.text;
+    }
+    // alert(defaultDeptChoice +defaultClassChoice);
+    var temp="Show Comparison: "
+    if (defaultDeptChoice!="NaN" && defaultClassChoice != "NaN"){
+      t.innerHTML=temp+ "    "+defaultDeptChoice+" "+defaultClassChoice;
+    }
+    else if (defaultClassChoice=="NaN"&& defaultDeptChoice!="NaN"){
+      t.innerHTML=temp+defaultDeptChoice +" [Please Select Class]";
+    }
+    else if (defaultClassChoice!="NaN"&& defaultDeptChoice=="NaN"){
+      t.innerHTML=temp+"[Please Select Dept] "+defaultClassChoice ;
+    }
+
+      // alert(event.target.text);
+  });
+  var compState=new Object();
+  compState.defaultVal=1;
+  compState.default=1;
+
+function jump(here){
+  window.location.hash=here;
+}
+function dropDown(id){
+  // alert("dropDown()"+document.getElementById(id).classList);
+  if (document.getElementById(id).classList.length>=1){
+
+    document.getElementById(id).classList.toggle("show");
+    if (defaultDeptChoice!="NaN"){
+      removeIrrelevant(id);
+    }
+    // document.getElementById("myCDropDown").classList.toggle("show");
+  }
+  else{
+    alert("dropDown(): Error: element has "+document.getElementById(id).classList+" children");
+    console.log("dropDown(): Error: element has "+document.getElementById(id).classList+" children");
+  }
+}
+function emptyDropDown(){
+    var t = document.getElementById("addCDropDownBelow");
+    t.removeChild("myCDropDown");
+
+}
+function addRelevantClasses(){
+    var t = document.getElementById("addCDropDownBelow");
+    var d= document.createElement("div");
+    d.class="dropdown-content";
+    d.id="myCDropDown";
+    t.append(d);
+    if (defaultDeptChoice!="NaN"){
+        for(var i =0; i<dept_Codes[defaultDeptChoice].length;i++){
+            if (trueIfExists(dropDown_Class,dept_Codes[defaultDeptChoice])){
+
+            }
+
+        }
+    }
+}
+function removeIrrelevant(id){
+    // alert(dept_Codes[defaultDeptChoice]);
+    var t = document.getElementById(id);
+    for (var i =1; i<dropDown_class.length+1;i++){
+      var a = document.getElementById("class_"+i);
+      alert(a.text+": "+trueIfExists(dept_Codes[defaultDeptChoice],a.text));
+
+      if (a== null){
+        alert("NULL");
+      }
+      else if (trueIfExists(dept_Codes[defaultDeptChoice],a.text)){
+          //do nothing. it belongs here
+      }
+      else{
+        document.getElementById("class_"+i).classList.toggle("show");
+
+
+        // alert("removing show");
+      }
+      // if (document.getElementById("class_"i).text)
+    }
+}
+window.onclick =function(event){
+    var dropdowns = document.getElementById(currentDropDown);
+
+    if (event.target.matches('.loadBut')){
+
+    }
+    if (dropdowns==null){
+
+    }
+    else if(!(event.target.matches('.dropbtn'))){
+      // alert("does not match .dropbtn");
+      // alert("currentDropDown open is "+currentDropDown);
+      var selectionVar="";
+      if (currentDropDownID=="myDDropDown"){
+        selectionVar="dept_";
+      }
+      else if (currentDropDownID=="myCDropDown"){
+        selectionVar="class_";
+      }
+      var dropdowns = document.getElementById(currentDropDownID).classList.remove('show');
+    }
+
+}
+function hide(id){
+  document.getElementById(id).classList.remove('show');
+}
+function show(id){
+  document.getElementById(id).classList.add('show');
+}
+
+function upload(){
+  var x = document.createElement("INPUT");
+  x.setAttribute("type", "file");
+  document.body.appendChild(x);
+}
+var loadTarget = {"b1":"hi"};
+
+$(".loadBut").on('click',function(){
+
+  addVal(file_contents[this.id]);
+});
+function openThis(e){
+
+  return mycontents;
+}
+
+
+  function readLine(evt){
+    var f = evt.target.files[0];
+    if (f){
+    var r = new FileReader();
+    r.onload = function(e){
+      var contents = e.target.result;
+      console.log("got the file.n"
+      + "name: "+ f.name +"\n"
+      + "type: " +f.type +"\n"
+      + "size: " +f.size + "bytes\n"
+      +"starts with: "+ contents
+      );
+      var obj =jQuery.parseJSON(contents);
+      // console.log(obj.Classes[0].Dept==="ICS");
+      parseInfo(contents);
+      }
+      r.readAsText(f);
+    }else{
+      console.log("failed to load file");
+    }
+  }
+
+  function addVal(myclass){
+        var obj=myclass;
+        // if(trueIfExists(studentList))
+        var x =document.getElementById("myTable");
+        var row = x.insertRow(0);
+        // var r2= x.insertRow(1);
+        var c1= row.insertCell(0);
+        var myname= obj.Name;
+        c1.innerHTML=obj.Name;
+        if (studentList[obj.Name]== null)
+        {
+            studentList[obj.Name]=[];
+        }
+        else{
+          console.log("parseInfo(): key already exists");
+        }
+        var c2;
+        for (var i =0; i<obj.Classes.length;i++){
+            var t = (obj.Classes[i].Dept + " "+ obj.Classes[i].Code);
+            addNameToClassList(obj.Name,t);
+            addClassToDept(obj.Classes[i].Code,obj.Classes[i].Dept);
+            addClassToDropDown(obj.Classes[i].Code);
+            addDeptToDropDown(obj.Classes[i].Dept);
+            if (trueIfExists(studentList,obj.Classes[i].Dept)){
+                  console.log("parseInfo(): class already exists");
+            }
+            else{
+                studentList[obj.Name].push(t);
+            }
+            c2=row.insertCell(i+1);
+            c2.innerHTML = t;
+          console.log("parseInfo(): adding " +t);
+        }
+
+  }
+  function addComp(){
+      console.log("addComp(): "+JSON.stringify(classList));
+      var v= document.getElementById("compdiv");
+      var comptable=document.createElement("TABLE");
+      comptable.id="table_comp";
+
+      var t= comptable.insertRow(0);
+      var c= t.insertCell(0);
+      var d= t.insertCell(1);
+
+      var listNames= commonClasses("me",defaultDeptChoice +" "+defaultClassChoice);
+
+      if (listNames===[]){
+
+          d.innerHTML=className[defaultDeptChoice+" "+ defaultClassChoice];
+
+      }
+      else{
+          listNames=listNames.join(" , ");
+          console.log("addComp(): names of people taking "+defaultDeptChoice+" "+defaultClassChoice+": "+listNames);
+          // alert("These people have: "+defaultDeptChoice+" "+defaultClassChoice+" together!"+listNames);
+          d.innerHTML=listNames;
+
+      }
+
+      c.innerHTML=defaultDeptChoice+" "+defaultClassChoice;
+      // d.innerHTML=listNames;
+
+      v.appendChild(comptable);
+  }
+  function parseInfo(json){
+      var obj=jQuery.parseJSON(json);
+      var x =document.getElementById("myTable");
+      var row = x.insertRow(0);
+      // var r2= x.insertRow(1);
+      var c1= row.insertCell(0);
+      var myname= obj.Name;
+      c1.innerHTML=obj.Name;
+      if (studentList[obj.Name]== null)
+      {
+          studentList[obj.Name]=[];
+      }
+      else{
+        console.log("parseInfo(): key already exists");
+      }
+      var c2;
+      for (var i =0; i<obj.Classes.length;i++){
+          var t = (obj.Classes[i].Dept + " "+ obj.Classes[i].Code);
+          addNameToClassList(obj.Name,t);
+          addClassToDept(obj.Classes[i].Code,obj.Classes[i].Dept);
+          if ($.inArray((t),studentList[obj.Name])>-1){
+                console.log("parseInfo(): class already exists");
+          }
+          else{
+              studentList[obj.Name].push(t);
+          }
+          c2=row.insertCell(i+1);
+          c2.innerHTML = t;
+        console.log("parseInfo(): adding " +t);
+      }
+  }
+  var dropDown_deptObj= new Object();
+      dropDown_deptObj.size=0;
+  var dropDown_classObj= new Object();
+      dropDown_classObj.size=0;
+
+  var dropDown_deptSIZE=function(){
+      var count=0;
+      for (var i in dropDown_dept){
+        count++;
+      }
+      return count;
+  }
+  var dropDown_classSIZE=function(){
+      var count=0;
+      for (var i in dropDown_class){
+        count++;
+      }
+      return count;
+  }
+  function trueIfExists(dropDownArray,myVal){
+      for (var i=0;i<dropDownArray.length;i++){
+          if(dropDownArray[i]==myVal){
+              return true;
+          }
+      }
+      return false;
+
+  }
+
+  function addClassToDropDown(className){
+      var c = document.getElementById("myCDropDown");
+      c.length=c.classList.length;
+
+      // dropDown_dept[className]=true;
+      if (trueIfExists(dropDown_class,className)){
+      }
+      else{
+          dropDown_class.push(className);
+          var t = document.createElement("a");
+          t.text=className;
+          t.className="class";
+          t.id="class_"+dropDown_classSIZE();
+          // alert(dropDown_classSIZE());
+          c.append(t);
+          // alert(c.length);
+      }
+  }
+function addDeptToDropDown(deptName){
+      var d = document.getElementById("myDDropDown");
+
+      if (trueIfExists(dropDown_dept,deptName)){
+      }
+      else{
+          // alert("addDeptToDropDown() adding: "+deptName);
+
+          dropDown_dept.push(deptName);
+          var w = document.createElement("a");
+          w.text=deptName;
+          w.className="dept";
+          w.id="dept_"+dropDown_deptSIZE();
+          d.append(w);
+      }
+  }
+  function addClassToDept(className, deptName){
+      if (dept_Codes[deptName]==null){
+        dept_Codes[deptName]=[];
+      }
+      if (trueIfExists(dept_Codes[deptName],className)){
+          console.log("addClassToDept():Error: "+className+" is already in: "+ deptName);
+      }
+      else{
+          dept_Codes[deptName].push(className);
+          console.log("addClassToDept(): class added!"+ dept_Codes[deptName]);
+      }
+  }
+  function addNameToClassList(name,className){
+      if (classList[className]==null){
+        classList[className]=[];
+      }
+      if (trueIfExists(classList[className],name)){
+          console.log("addNameToClassList():Error: "+name+" is already Enrolled in!: "+ className);
+      }
+      else{
+          classList[className].push(name);
+          console.log("addNameToClassList(): name added!"+ classList[className]);
+      }
+      // console.log(classList.length);
+  }
+  function commonClasses(me,myClass){
+        // alert("commonClasses():"+myClass);
+        if (classList[myClass]==null){
+          console.log("commonClasses(): class "+ myClass+" not found");
+          return [];
+        }
+        else{
+          return classList[myClass];
+        }
+  }
+  document.getElementById('myFile').addEventListener('change', readLine,false);
+
+});
+</script>
+<style>
+table {
+    margin-top:15px;
+    margin-bottom:15px;
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+</style>
+</head>
+
+
+<body >
+<header>
+<nav>
+  <div id="navbar">
+    <!-- <ul> -->
+<li><a id="home" href="index.html">Home</a></li>
+<li><a id="tools" href="class_examiner.html">Tools</a></li>
+<li><a id="contact">Contact</a></li>
+<li><a id= "aquafinda" href="waterbottles.html">Aquafinda</a></li>
+<li><a id= "research" href="research_findings.html">Research</a></li>
+<!-- </ul> -->
+</div>
+</nav>
+</header>
+
+<div class= "base-container">
+  <h1 >Class Comparison Tool </h1>
+
+  <div style="width:100%"id="various" class="container">
+    <h3> Quick Load Course Schedules <h3>
+      <button class="loadBut" id ="b1">David_Fall</button>
+      <button class="loadBut"id ="b2">Gary_Fall</button>
+      <button class="loadBut"id ="b3">Jon_Fall</button>
+      <button class="loadBut"id ="b4">Jon_Winter</button>
+      <button class="loadBut"id ="b5">Max_Fall</button>
+      <button class="loadBut"id ="b6">Max_Winter</button>
+      <button class="loadBut" id ="b7">V_Fall</button>
+      <button class="loadBut" id ="b8">V_Winter</button>
+
+  </div>
+<div style="width:100%" class="container">
+  <h3>Upload </h3>
+  <input type="file" id="myFile">
+</div>
+  <div style="width:100%" id="result" class="hide container results">
+      <h3>Class Listing </h3>
+      <table id="myTable">
+      </table>
+  </div>
+  <div style="width:100%"sid="compdiv" class="container results">
+      <h3>Comp Listing</h3>
+  </div>
+<div style="width:100%"id="actionDiv" class="container">
+    <h3 id="compHThree">Show Comparison: </h3>
+
+    <div style="width:100%" class="dropdown" >
+    <button id ="byName">By Name</button>
+
+      <button id="byDept" class="dropbtn">Dept</button>
+      <div id="addDDropDownBelow">
+        <div id="myDDropDown" class="dropdown-content"></div>
+      </div>
+      <button id ="byClasses" class="dropbtn">By Classes</button>
+      <div id="addCDropDownBelow">
+        <div id="myCDropDown" class="dropdown-content"></div>
+      </div>
+    </div>
+    <button id ="comp">Perform Action</button>
+</div>
+</div>
+
+
+<address>
+
+
+
+<a href="http://www.ics.uci.edu/">
+Information and Computer Science</a>
+<a href="http://www.uci.edu/">University of California, Irvine</a>
+Irvine, CA 92697-3425
+Last modified: Oct 31 2016
+
+</address>
+</body>
+</html>

@@ -1,0 +1,10 @@
+* {
+  box-sizing:border-box;
+
+}
+p{
+  margin-left: 3px;
+}
+body{
+  border 1px black solid;
+}
